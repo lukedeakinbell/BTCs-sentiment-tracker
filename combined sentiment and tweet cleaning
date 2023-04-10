@@ -1,0 +1,45 @@
+import re
+import string
+import nltk
+from nltk.corpus import stopwords
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+nltk.download('stopwords')
+nltk.download('vader_lexicon')
+
+# Example tweets
+tweets = [
+    "Bitcoin is the future of currency!",
+    "I lost all my savings on Bitcoin, it's a scam!",
+    "Just bought some Bitcoin, hope it goes up!",
+    "Bitcoin mining is bad for the environment."
+]
+
+def clean_tweet(tweet):
+    # Remove links, special characters, and punctuations
+    tweet = re.sub(r"http\S+|www\S+|https\S+", '', tweet, flags=re.MULTILINE)
+    tweet = re.sub(r'\@\w+|\#', '', tweet)
+    tweet = tweet.translate(str.maketrans('', '', string.punctuation))
+
+    # Lowercase and tokenize
+    tweet = tweet.lower()
+    tokens = nltk.word_tokenize(tweet)
+
+    # Remove stopwords
+    stopwords_english = stopwords.words('english')
+    tweet_clean = []
+    for word in tokens:
+        if word not in stopwords_english:
+            tweet_clean.append(word)
+
+    return tweet_clean
+
+analyzer = SentimentIntensityAnalyzer()
+
+for tweet in tweets:
+    print(f"Original tweet: {tweet}")
+    cleaned_tweet = clean_tweet(tweet)
+    print(f"Cleaned tweet: {cleaned_tweet}")
+    sentiment_scores = analyzer.polarity_scores(tweet)
+    print(f"Sentiment score: {sentiment_scores['compound']}")
+    print("")
