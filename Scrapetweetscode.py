@@ -13,7 +13,7 @@ api = tweepy.API(auth)
 
 # Define your search query and the number of tweets you want to retrieve
 search_query = "bitcoin OR BTC"
-num_tweets = 100
+num_tweets = 500
 
 # Collect tweets using the search query
 tweets = tweepy.Cursor(api.search_tweets,
